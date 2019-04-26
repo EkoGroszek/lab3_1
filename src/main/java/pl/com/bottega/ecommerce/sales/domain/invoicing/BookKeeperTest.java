@@ -89,4 +89,15 @@ public class BookKeeperTest {
 
         Mockito.verify(taxPolicy, times(0)).calculateTax(any(), any());
     }
+
+    @Test public void twoInvoicesWithOneItemEachShouldCallCalculateTaxTwice() {
+        when(taxPolicy.calculateTax(any(), any())).thenReturn(tax);
+        BookKeeper bookKeeper = new BookKeeper(invoiceFactory);
+        invoiceRequest.add(requestItem);
+
+        Invoice firstInvoice = bookKeeper.issuance(invoiceRequest, taxPolicy);
+        Invoice secondInvoice = bookKeeper.issuance(invoiceRequest, taxPolicy);
+
+        Mockito.verify(taxPolicy, times(2)).calculateTax(any(), any());
+    }
 }
