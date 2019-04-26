@@ -1,9 +1,5 @@
 package pl.com.bottega.ecommerce.sales.domain.reservation;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import pl.com.bottega.ddd.support.domain.BaseAggregateRoot;
 import pl.com.bottega.ecommerce.canonicalmodel.publishedlanguage.ClientData;
 import pl.com.bottega.ecommerce.canonicalmodel.publishedlanguage.Id;
@@ -13,6 +9,10 @@ import pl.com.bottega.ecommerce.sales.domain.offer.Offer;
 import pl.com.bottega.ecommerce.sales.domain.offer.OfferItem;
 import pl.com.bottega.ecommerce.sales.domain.productscatalog.Product;
 import pl.com.bottega.ecommerce.sharedkernel.Money;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class Reservation extends BaseAggregateRoot{
 	public enum ReservationStatus {
@@ -34,8 +34,7 @@ public class Reservation extends BaseAggregateRoot{
 	private Reservation() {
 	}
 
-	Reservation(Id aggregateId, ReservationStatus status,
-			ClientData clientData, Date createDate) {
+	public Reservation(Id aggregateId, ReservationStatus status, ClientData clientData, Date createDate) {
 		this.id = aggregateId;
 		this.status = status;
 		this.clientData = clientData;
