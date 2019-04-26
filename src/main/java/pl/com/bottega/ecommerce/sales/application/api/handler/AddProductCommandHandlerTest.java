@@ -3,6 +3,7 @@ package pl.com.bottega.ecommerce.sales.application.api.handler;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 import pl.com.bottega.ecommerce.canonicalmodel.publishedlanguage.ClientData;
 import pl.com.bottega.ecommerce.canonicalmodel.publishedlanguage.Id;
 import pl.com.bottega.ecommerce.sales.application.api.command.AddProductCommand;
@@ -23,6 +24,7 @@ import static org.hamcrest.core.Is.is;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 public class AddProductCommandHandlerTest {
 
@@ -82,5 +84,39 @@ public class AddProductCommandHandlerTest {
         when(suggestionService.suggestEquivalent(any(), any())).thenReturn(product);
 
         Assert.assertThat(reservation.getReservedProducts().size(), is(0));
+    }
+
+    @Test public void oneCallHandleShouldLoadReservationRepositoryOnce() {
+        when(reservationRepository.load(any())).thenReturn(reservation);
+        when(productRepository.load(any())).thenReturn(product);
+        when(clientRepository.load(any())).thenReturn(client);
+        when(suggestionService.suggestEquivalent(any(), any())).thenReturn(product);
+
+        addProductCommandHandler.handle(addProductCommand);
+
+        Mockito.verify(reservationRepository, times(1)).load(any());
+    }
+
+    @Test public void oneCallHandleShouldLoadProductOnce() {
+        when(reservationRepository.load(any())).thenReturn(reservation);
+        when(productRepository.load(any())).thenReturn(product);
+        when(clientRepository.load(any())).thenReturn(client);
+        when(suggestionService.suggestEquivalent(any(), any())).thenReturn(product);
+
+        addProductCommandHandler.handle(addProductCommand);
+
+        Mockito.verify(productRepository, times(1)).load(any());
+    }
+
+
+    @Test public void oneCallHandleShouldSaveReservationRepositoryOnce() {
+        when(reservationRepository.load(any())).thenReturn(reservation);
+        when(productRepository.load(any())).thenReturn(product);
+        when(clientRepository.load(any())).thenReturn(client);
+        when(suggestionService.suggestEquivalent(any(), any())).thenReturn(product);
+
+        addProductCommandHandler.handle(addProductCommand);
+
+        Mockito.verify(reservationRepository, times(1)).save(any());
     }
 }
