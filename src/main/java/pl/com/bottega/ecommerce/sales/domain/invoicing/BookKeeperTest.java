@@ -40,11 +40,10 @@ public class BookKeeperTest {
         tax = new Tax(money, "taxStub");
         taxPolicy = mock(TaxPolicy.class);
         bookKeeper = new BookKeeper(invoiceFactory);
+        when(taxPolicy.calculateTax(any(), any())).thenReturn(tax);
     }
 
     @Test public void oneRequestItemShouldReturnInvoiceWithOneItem() {
-        when(taxPolicy.calculateTax(any(), any())).thenReturn(tax);
-        BookKeeper bookKeeper = new BookKeeper(invoiceFactory);
         invoiceRequest.add(requestItem);
 
         Invoice invoice = bookKeeper.issuance(invoiceRequest, taxPolicy);
@@ -53,50 +52,37 @@ public class BookKeeperTest {
     }
 
     @Test public void noRequestItemShouldReturnInvoiceWithNoItems() {
-        when(taxPolicy.calculateTax(any(), any())).thenReturn(tax);
-        BookKeeper bookKeeper = new BookKeeper(invoiceFactory);
-
         Invoice invoice = bookKeeper.issuance(invoiceRequest, taxPolicy);
 
         Assert.assertThat(invoice.getItems().size(), is(0));
     }
 
     @Test public void noRequestItemShouldReturnInvoiceShouldreturnInvoiceWithNetEqualsZero() {
-        when(taxPolicy.calculateTax(any(), any())).thenReturn(tax);
-        BookKeeper bookKeeper = new BookKeeper(invoiceFactory);
-
         Invoice invoice = bookKeeper.issuance(invoiceRequest, taxPolicy);
 
         Assert.assertThat(invoice.getNet(), is(Money.ZERO));
     }
 
     @Test public void twoRequestItemsShouldCallCalculateTaxTwice() {
-        when(taxPolicy.calculateTax(any(), any())).thenReturn(tax);
-        BookKeeper bookKeeper = new BookKeeper(invoiceFactory);
         invoiceRequest.add(requestItem);
         invoiceRequest.add(requestItem);
 
-        Invoice invoice = bookKeeper.issuance(invoiceRequest, taxPolicy);
+        bookKeeper.issuance(invoiceRequest, taxPolicy);
 
         Mockito.verify(taxPolicy, times(2)).calculateTax(any(), any());
     }
 
     @Test public void noRequestItemsShouldNotCallCalculateTax() {
-        when(taxPolicy.calculateTax(any(), any())).thenReturn(tax);
-        BookKeeper bookKeeper = new BookKeeper(invoiceFactory);
-
-        Invoice invoice = bookKeeper.issuance(invoiceRequest, taxPolicy);
+        bookKeeper.issuance(invoiceRequest, taxPolicy);
 
         Mockito.verify(taxPolicy, times(0)).calculateTax(any(), any());
     }
 
     @Test public void twoInvoicesWithOneItemEachShouldCallCalculateTaxTwice() {
-        when(taxPolicy.calculateTax(any(), any())).thenReturn(tax);
-        BookKeeper bookKeeper = new BookKeeper(invoiceFactory);
         invoiceRequest.add(requestItem);
 
-        Invoice firstInvoice = bookKeeper.issuance(invoiceRequest, taxPolicy);
-        Invoice secondInvoice = bookKeeper.issuance(invoiceRequest, taxPolicy);
+        bookKeeper.issuance(invoiceRequest, taxPolicy);
+        bookKeeper.issuance(invoiceRequest, taxPolicy);
 
         Mockito.verify(taxPolicy, times(2)).calculateTax(any(), any());
     }
