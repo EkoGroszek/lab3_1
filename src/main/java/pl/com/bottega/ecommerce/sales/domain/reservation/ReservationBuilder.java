@@ -4,28 +4,20 @@ import pl.com.bottega.ecommerce.canonicalmodel.publishedlanguage.ClientData;
 import pl.com.bottega.ecommerce.canonicalmodel.publishedlanguage.Id;
 
 import java.util.Date;
-import java.util.List;
 
 public class ReservationBuilder {
 
-    private Reservation.ReservationStatus status;
+    private Reservation.ReservationStatus status = Reservation.ReservationStatus.OPENED;
 
-    private List<ReservationItem> items;
+    private ClientData clientData = new ClientData();
 
-    private ClientData clientData;
-
-    private Date createDate;
+    private Date createDate = new Date();
 
     public ReservationBuilder() {
     }
 
     public ReservationBuilder setStatus(Reservation.ReservationStatus status) {
         this.status = status;
-        return this;
-    }
-
-    public ReservationBuilder setItems(List<ReservationItem> items) {
-        this.items = items;
         return this;
     }
 
@@ -39,7 +31,7 @@ public class ReservationBuilder {
         return this;
     }
 
-    public Reservation build(){
+    public Reservation build() {
         return new Reservation(Id.generate(), status, clientData, createDate);
     }
 }

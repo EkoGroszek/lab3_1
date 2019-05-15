@@ -5,7 +5,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import pl.com.bottega.ddd.support.domain.BaseAggregateRoot;
-import pl.com.bottega.ecommerce.canonicalmodel.publishedlanguage.ClientData;
 import pl.com.bottega.ecommerce.canonicalmodel.publishedlanguage.Id;
 import pl.com.bottega.ecommerce.sales.application.api.command.AddProductCommand;
 import pl.com.bottega.ecommerce.sales.domain.client.Client;
@@ -15,10 +14,9 @@ import pl.com.bottega.ecommerce.sales.domain.productscatalog.Product;
 import pl.com.bottega.ecommerce.sales.domain.productscatalog.ProductBuilder;
 import pl.com.bottega.ecommerce.sales.domain.productscatalog.ProductRepository;
 import pl.com.bottega.ecommerce.sales.domain.reservation.Reservation;
+import pl.com.bottega.ecommerce.sales.domain.reservation.ReservationBuilder;
 import pl.com.bottega.ecommerce.sales.domain.reservation.ReservationRepository;
 import pl.com.bottega.ecommerce.system.application.SystemContext;
-
-import java.util.Date;
 
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Matchers.any;
@@ -52,6 +50,7 @@ public class AddProductCommandHandlerTest {
 
     private ProductBuilder productBuilder;
 
+    private ReservationBuilder reservationBuilder;
     @Before public void init() {
         orderId = Id.generate();
         productId = Id.generate();
@@ -63,7 +62,9 @@ public class AddProductCommandHandlerTest {
 
         addProductCommandHandler = new AddProductCommandHandler(reservationRepository, productRepository, suggestionService,
                                                                 clientRepository, systemContext);
-        reservation = new Reservation(orderId, Reservation.ReservationStatus.OPENED, new ClientData(), new Date());
+        reservationBuilder = new ReservationBuilder();
+        reservation = reservationBuilder.build();
+
         productBuilder = new ProductBuilder();
         product = productBuilder.build();
         client = new Client();
