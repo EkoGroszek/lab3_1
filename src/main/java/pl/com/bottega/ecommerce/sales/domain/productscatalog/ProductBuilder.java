@@ -10,12 +10,6 @@ public class ProductBuilder {
 
     private ProductType productType = ProductType.STANDARD;
 
-//    private Money price;
-//
-//    private String name;
-//
-//    private ProductType productType;
-
     public ProductBuilder(){
 
     }
