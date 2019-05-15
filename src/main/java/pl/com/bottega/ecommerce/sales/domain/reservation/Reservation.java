@@ -31,8 +31,8 @@ public class Reservation extends BaseAggregateRoot{
 	private Date createDate;
 
 	@SuppressWarnings("unused")
-	private Reservation() {
-	}
+//	private Reservation() {
+//	}
 
 	public Reservation(Id aggregateId, ReservationStatus status, ClientData clientData, Date createDate) {
 		this.id = aggregateId;

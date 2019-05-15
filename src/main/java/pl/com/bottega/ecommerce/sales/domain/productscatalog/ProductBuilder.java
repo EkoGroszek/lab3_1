@@ -30,7 +30,7 @@ public class ProductBuilder {
     }
 
     public Product build(){
-        return new Product(Id.generate(),this.price,name,productType);
+        return new Product(Id.generate(),price,name,productType);
     }
 
 }
