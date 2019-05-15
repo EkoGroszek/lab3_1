@@ -10,6 +10,12 @@ public class ProductBuilder {
 
     private ProductType productType = ProductType.STANDARD;
 
+//    private Money price;
+//
+//    private String name;
+//
+//    private ProductType productType;
+
     public ProductBuilder(){
 
     }
@@ -30,7 +36,7 @@ public class ProductBuilder {
     }
 
     public Product build(){
-        return new Product(Id.generate(),price,name,productType);
+        return new Product(Id.generate(),this.price,name,productType);
     }
 
 }

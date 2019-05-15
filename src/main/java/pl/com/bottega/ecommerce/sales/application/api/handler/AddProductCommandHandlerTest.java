@@ -12,11 +12,10 @@ import pl.com.bottega.ecommerce.sales.domain.client.Client;
 import pl.com.bottega.ecommerce.sales.domain.client.ClientRepository;
 import pl.com.bottega.ecommerce.sales.domain.equivalent.SuggestionService;
 import pl.com.bottega.ecommerce.sales.domain.productscatalog.Product;
+import pl.com.bottega.ecommerce.sales.domain.productscatalog.ProductBuilder;
 import pl.com.bottega.ecommerce.sales.domain.productscatalog.ProductRepository;
-import pl.com.bottega.ecommerce.sales.domain.productscatalog.ProductType;
 import pl.com.bottega.ecommerce.sales.domain.reservation.Reservation;
 import pl.com.bottega.ecommerce.sales.domain.reservation.ReservationRepository;
-import pl.com.bottega.ecommerce.sharedkernel.Money;
 import pl.com.bottega.ecommerce.system.application.SystemContext;
 
 import java.util.Date;
@@ -51,6 +50,8 @@ public class AddProductCommandHandlerTest {
 
     private Client client;
 
+    private ProductBuilder productBuilder;
+
     @Before public void init() {
         orderId = Id.generate();
         productId = Id.generate();
@@ -63,7 +64,8 @@ public class AddProductCommandHandlerTest {
         addProductCommandHandler = new AddProductCommandHandler(reservationRepository, productRepository, suggestionService,
                                                                 clientRepository, systemContext);
         reservation = new Reservation(orderId, Reservation.ReservationStatus.OPENED, new ClientData(), new Date());
-        product = new Product(productId, Money.ZERO, "productNameStub", ProductType.STANDARD);
+        productBuilder = new ProductBuilder();
+        product = productBuilder.build();
         client = new Client();
 
         when(reservationRepository.load(any())).thenReturn(reservation);
@@ -94,18 +96,17 @@ public class AddProductCommandHandlerTest {
         Mockito.verify(productRepository, times(1)).load(any());
     }
 
-
     @Test public void oneCallHandleShouldSaveReservationRepositoryOnce() {
         addProductCommandHandler.handle(addProductCommand);
 
         Mockito.verify(reservationRepository, times(1)).save(any());
     }
 
-    @Test public void  whenProductIsNotAvailableClientShouldNotBeLoaded(){
+    @Test public void whenProductIsNotAvailableClientShouldNotBeLoaded() {
         BaseAggregateRoot baseAggregateRoot = mock(BaseAggregateRoot.class);
         when(baseAggregateRoot.isRemoved()).thenReturn(true);
         addProductCommandHandler.handle(addProductCommand);
 
-        Mockito.verify(suggestionService, times(0)).suggestEquivalent(any(),any());
+        Mockito.verify(suggestionService, times(0)).suggestEquivalent(any(), any());
     }
 }
