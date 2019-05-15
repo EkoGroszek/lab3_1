@@ -51,6 +51,9 @@ public class AddProductCommandHandlerTest {
     private ProductBuilder productBuilder;
 
     private ReservationBuilder reservationBuilder;
+
+    private AddProductCommandHandlerBuilder addProductCommandHandlerBuilder;
+
     @Before public void init() {
         orderId = Id.generate();
         productId = Id.generate();
@@ -60,8 +63,12 @@ public class AddProductCommandHandlerTest {
         suggestionService = mock(SuggestionService.class);
         clientRepository = mock(ClientRepository.class);
 
-        addProductCommandHandler = new AddProductCommandHandler(reservationRepository, productRepository, suggestionService,
-                                                                clientRepository, systemContext);
+        addProductCommandHandlerBuilder = new AddProductCommandHandlerBuilder();
+        addProductCommandHandler = addProductCommandHandlerBuilder.setReservationRepository(reservationRepository)
+                                                                  .setProductRepository(productRepository)
+                                                                  .setSuggestionService(suggestionService)
+                                                                  .setClientRepository(clientRepository)
+                                                                  .build();
         reservationBuilder = new ReservationBuilder();
         reservation = reservationBuilder.build();
 
